@@ -12,7 +12,7 @@
 /**
  * usage
  */
-function usage()
+function _webrun_usage()
 {
   echo "usage:\n";
   echo "  php webrun.php POST index.php item=123&name=TAROU\n";
@@ -23,19 +23,19 @@ $requestMethod = @$argv[1];
 $targetSrc = @$argv[2];
 $queryString = @$argv[3];
 
-$requestMethod || usage();
-$targetSrc || usage();
+$requestMethod || _webrun_usage();
+$targetSrc || _webrun_usage();
 
-chargeRequestParameter($requestMethod, $targetSrc, $queryString);
-chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString);
+_webrun_chargeRequestParameter($requestMethod, $targetSrc, $queryString);
+_webrun_chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString);
 
-webrunEx($targetSrc);
+_webrun_execEx($targetSrc);
 
 /**
  * 実行して結果を出力
  * 目標のスクリプトから戻ってこないこと（exitしているなど）が予想される場合はこちらを使って下さい。
  */
-function webrunEx($targetSrc)
+function _webrun_execEx($targetSrc)
 {
   include($targetSrc);
 }
@@ -43,7 +43,7 @@ function webrunEx($targetSrc)
 /**
  * 実行して結果を出力
  */
-function webrun($targetSrc)
+function _webrun_exec($targetSrc)
 {
   ob_start();
   include($targetSrc);
@@ -61,7 +61,7 @@ function webrun($targetSrc)
  * 適当なリクエストパラメータを突っ込みます。
  * @return void
  */
-function chargeRequestParameter($requestMethod, $targetSrc, $queryString)
+function _webrun_chargeRequestParameter($requestMethod, $targetSrc, $queryString)
 {
   if ($requestMethod == 'POST') {
     parse_str($queryString, $_POST);
@@ -70,7 +70,7 @@ function chargeRequestParameter($requestMethod, $targetSrc, $queryString)
     parse_str($queryString, $_GET);
     parse_str($queryString, $_REQUEST);
   } else {
-    mydie("unknown method");
+    _webrun_mydie("unknown method");
   }
 }
 
@@ -79,7 +79,7 @@ function chargeRequestParameter($requestMethod, $targetSrc, $queryString)
  * 適当なhttpd環境変数を突っ込みます。
  * @return void
  */
-function chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString)
+function _webrun_chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString)
 {
   $_SERVER['HTTP_HOST'] = '127.0.0.1';
   $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ja; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13 ( .NET CLR 3.5.30729)';
@@ -114,7 +114,7 @@ function chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString)
 /**
  * dieする
  */
-function mydie($msg)
+function _webrun_mydie($msg)
 {
   echo $msg, "\n";
   exit(1);
