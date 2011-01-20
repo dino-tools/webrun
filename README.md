@@ -14,11 +14,13 @@ webrun
 
 これはコマンドライン用のスクリプトです。
 
+ターゲットのPHPファイルと同じディレクトリで実行して下さい。
+
 以下のような引数を取ります。
 
-* 必須 "GET" or "POST"
-* 必須 起動したいウェブアプリのPHPファイル名
-* 任意 クエリーストリング（hoge=1&puga=abcとかいうやつ）
+1. 必須 "GET" or "POST"
+2. 必須 起動したいターゲットのウェブアプリのPHPファイル名
+3. 任意 クエリーストリング（hoge=1&puga=abcとかいうやつ）
 
 このツールは、以下のような動作を行います。
 
@@ -31,11 +33,17 @@ $_SERVERや$_POSTに値を詰め込んでから目標のPHPファイルを起動
 
 しょぼいツールですがわりと便利です。
 
+# TODO
+
+* 第二引数をURLと同じ仕様にしたい（仕様変更）
+ * PATH_INFO, REQUEST_URI, QUERY_STRINGなどを正しく設定できるようにしたい
+* 任意の環境変数をオプションで指定できるようにしたい
+
 # EXAMPLE
 
 このような感じでシェルから起動して下さい
 
-    $ php webrun.php POST /path/to/docroot/index.php item=123&name=TAROU
+    $ php webrun.php POST target_webapp.php item=123&name=TAROU
     
 # CHANGELOG
 
