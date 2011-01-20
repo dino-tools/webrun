@@ -36,7 +36,7 @@ $_SERVERや$_POSTに値を詰め込んでから目標のPHPファイルを起動
 # TODO
 
 * 第二引数をURLと同じ仕様にしたい（仕様変更）
-  ※これによって、PATH_INFO, REQUEST_URI, QUERY_STRINGなどを正しく設定できるようにしたい
+※これによって、PATH_INFO, REQUEST_URI, QUERY_STRINGなどを正しく設定できるようにしたい
 * 任意の環境変数をオプションで指定できるようにしたい
 
 # EXAMPLE
