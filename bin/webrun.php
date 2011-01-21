@@ -29,16 +29,7 @@ $targetSrc || _webrun_usage();
 _webrun_chargeRequestParameter($requestMethod, $targetSrc, $queryString);
 _webrun_chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString);
 
-_webrun_execEx($targetSrc);
-
-/**
- * 実行して結果を出力
- * 目標のスクリプトから戻ってこないこと（exitしているなど）が予想される場合はこちらを使って下さい。
- */
-function _webrun_execEx($targetSrc)
-{
-  include($targetSrc);
-}
+_webrun_exec($targetSrc);
 
 /**
  * 実行して結果を出力
@@ -46,7 +37,11 @@ function _webrun_execEx($targetSrc)
 function _webrun_exec($targetSrc)
 {
   ob_start();
-  include($targetSrc);
+  try {
+    include($targetSrc);
+  } catch (Exception $ex) {
+    echo $ex->__toString();
+  }
   $contents = ob_get_clean();
   
   foreach (headers_list() as $hdr) {
@@ -113,9 +108,32 @@ function _webrun_chargeHttpdEnvironment($requestMethod, $targetSrc, $queryString
 
 /**
  * dieする
+ * @return void
  */
 function _webrun_mydie($msg)
 {
   echo $msg, "\n";
   exit(1);
+}
+
+/**
+ * 簡易ログ関数です
+ * @return void
+ */
+function _webrun_stderr($msg="")
+{
+  $trace = debug_backtrace();
+  $currentInfo = $trace[0];
+  $upperInfo = $trace[1];
+  
+  $line = $currentInfo['line'];
+  $func = $upperInfo['function'];
+  $filename = basename($currentInfo['file']);
+  
+  $msecNew = microtime(true);
+  $elapse = $msecNew - $_SERVER['REQUEST_TIME'];
+  
+  $datetime = date('Y-m-d H:i:s');
+  
+  fprintf(STDERR, "[%s (%0.3f)] %s(%d:%s) %s\n", $datetime, $elapse, $filename, $line, $func, $msg);
 }
